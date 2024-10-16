@@ -1,0 +1,154 @@
+Here’s a set of simple MongoDB queries demonstrating CRUD (Create, Read, Update, Delete) operations, the `save` method, and the use of logical operators.
+
+### Example Document Structure
+
+Assume you have a `employees` collection with the following structure:
+```json
+{
+  "_id": ObjectId("..."),
+  "firstName": "John",
+  "lastName": "Doe",
+  "department": "Engineering",
+  "salary": 60000,
+  "hireDate": ISODate("2020-06-15")
+}
+```
+
+### 1. **Create Operation (`insertOne`, `insertMany`)**
+
+#### a) Insert a single document:
+```js
+db.employees.insertOne({
+  firstName: "John",
+  lastName: "Doe",
+  department: "Engineering",
+  salary: 60000,
+  hireDate: new Date("2020-06-15")
+});
+```
+
+#### b) Insert multiple documents:
+```js
+db.employees.insertMany([
+  {
+    firstName: "Jane",
+    lastName: "Smith",
+    department: "HR",
+    salary: 55000,
+    hireDate: new Date("2019-08-01")
+  },
+  {
+    firstName: "Alex",
+    lastName: "Johnson",
+    department: "Sales",
+    salary: 45000,
+    hireDate: new Date("2021-03-10")
+  }
+]);
+```
+
+### 2. **Read Operation (`find`, `findOne`)**
+
+#### a) Find all documents in the collection:
+```js
+db.employees.find();
+```
+
+#### b) Find a document by a specific field:
+```js
+db.employees.findOne({ firstName: "John" });
+```
+
+#### c) Find documents with a salary greater than 50,000:
+```js
+db.employees.find({ salary: { $gt: 50000 } });
+```
+
+#### d) Find documents using logical operators (`$and`, `$or`, `$not`):
+- **Using `$and`** to find employees in Engineering or Sales with a salary above 50,000.
+```js
+db.employees.find({
+  $and: [
+    { department: { $in: ["Engineering", "Sales"] } },
+    { salary: { $gt: 50000 } }
+  ]
+});
+```
+
+- **Using `$or`** to find employees in either Engineering or HR departments:
+```js
+db.employees.find({
+  $or: [
+    { department: "Engineering" },
+    { department: "HR" }
+  ]
+});
+```
+
+### 3. **Update Operation (`updateOne`, `updateMany`, `save`)**
+
+#### a) Update the salary of an employee by first name:
+```js
+db.employees.updateOne(
+  { firstName: "John" },
+  { $set: { salary: 65000 } }
+);
+```
+
+#### b) Update multiple employees in a department:
+```js
+db.employees.updateMany(
+  { department: "Sales" },
+  { $set: { salary: 50000 } }
+);
+```
+
+#### c) Save method (Insert if doesn’t exist, update if it exists):
+```js
+db.employees.save({
+  _id: ObjectId("..."),  // ID of an existing employee
+  firstName: "Maria",
+  lastName: "Garcia",
+  department: "Engineering",
+  salary: 70000,
+  hireDate: new Date("2018-12-10")
+});
+```
+
+### 4. **Delete Operation (`deleteOne`, `deleteMany`)**
+
+#### a) Delete a single employee by their first name:
+```js
+db.employees.deleteOne({ firstName: "Alex" });
+```
+
+#### b) Delete all employees in the HR department:
+```js
+db.employees.deleteMany({ department: "HR" });
+```
+
+### 5. **Using Logical Operators in Queries**
+
+#### a) Find employees who are either in Engineering or have a salary greater than 60,000:
+```js
+db.employees.find({
+  $or: [
+    { department: "Engineering" },
+    { salary: { $gt: 60000 } }
+  ]
+});
+```
+
+#### b) Find employees who are not in the Sales department:
+```js
+db.employees.find({
+  department: { $ne: "Sales" }
+});
+```
+
+### 6. **Count the Documents in the Collection**
+```js
+db.employees.countDocuments();
+```
+
+These are some basic MongoDB CRUD operations using methods like `insertOne`, `find`, `updateOne`, `deleteMany`, and logical operators such as `$and`, `$or`, and `$ne`.

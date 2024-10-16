@@ -1,0 +1,124 @@
+Here's a guide for designing and developing SQL DDL (Data Definition Language) and DML (Data Manipulation Language) statements with examples of SQL objects like Table, View, Index, Sequence, Synonym, constraints, and basic queries.
+
+### 1. **DDL Statements**
+
+#### a) **Creating Tables with Constraints**
+```sql
+CREATE TABLE Employees (
+    EmployeeID INT PRIMARY KEY,
+    FirstName VARCHAR(50),
+    LastName VARCHAR(50),
+    DateOfBirth DATE,
+    Email VARCHAR(100) UNIQUE,
+    PhoneNumber VARCHAR(15) CHECK (PhoneNumber LIKE '[0-9]%'),
+    Salary DECIMAL(10, 2) CHECK (Salary > 0),
+    DepartmentID INT NOT NULL,
+    HireDate DATE DEFAULT CURRENT_DATE
+);
+```
+
+#### b) **Creating a View**
+```sql
+CREATE VIEW EmployeeView AS
+SELECT EmployeeID, FirstName, LastName, Salary
+FROM Employees
+WHERE Salary > 50000;
+```
+
+#### c) **Creating an Index**
+```sql
+CREATE INDEX idx_lastname ON Employees(LastName);
+```
+
+#### d) **Creating a Sequence**
+```sql
+CREATE SEQUENCE EmployeeSeq
+START WITH 1
+INCREMENT BY 1;
+```
+
+#### e) **Creating a Synonym**
+```sql
+CREATE SYNONYM EmpViewSyn FOR EmployeeView;
+```
+
+#### f) **Adding a Foreign Key Constraint**
+```sql
+CREATE TABLE Departments (
+    DepartmentID INT PRIMARY KEY,
+    DepartmentName VARCHAR(100)
+);
+
+ALTER TABLE Employees
+ADD CONSTRAINT fk_department
+FOREIGN KEY (DepartmentID) REFERENCES Departments(DepartmentID);
+```
+
+### 2. **DML Statements**
+
+Here are 10 example SQL queries using DML statements like `INSERT`, `SELECT`, `UPDATE`, `DELETE`, etc.
+
+#### a) **Inserting Data into Tables**
+```sql
+INSERT INTO Departments (DepartmentID, DepartmentName)
+VALUES (1, 'HR'), (2, 'Engineering'), (3, 'Sales');
+```
+
+#### b) **Inserting Data with Sequence**
+```sql
+INSERT INTO Employees (EmployeeID, FirstName, LastName, DateOfBirth, Email, Salary, DepartmentID)
+VALUES (EmployeeSeq.NEXTVAL, 'John', 'Doe', '1990-06-15', 'john.doe@example.com', 60000, 2);
+```
+
+#### c) **Selecting Data from a Table**
+```sql
+SELECT * FROM Employees;
+```
+
+#### d) **Selecting Data Using a View**
+```sql
+SELECT * FROM EmployeeView;
+```
+
+#### e) **Updating Data in a Table**
+```sql
+UPDATE Employees
+SET Salary = Salary * 1.1
+WHERE DepartmentID = 2;
+```
+
+#### f) **Deleting a Record**
+```sql
+DELETE FROM Employees
+WHERE EmployeeID = 1;
+```
+
+#### g) **Using `JOIN` to Retrieve Data**
+```sql
+SELECT e.FirstName, e.LastName, d.DepartmentName
+FROM Employees e
+JOIN Departments d ON e.DepartmentID = d.DepartmentID;
+```
+
+#### h) **Using an Aggregate Function**
+```sql
+SELECT DepartmentID, AVG(Salary) AS AverageSalary
+FROM Employees
+GROUP BY DepartmentID;
+```
+
+#### i) **Filtering Data with `WHERE` Clause**
+```sql
+SELECT FirstName, LastName, Salary
+FROM Employees
+WHERE Salary > 55000;
+```
+
+#### j) **Using `ORDER BY` to Sort Data**
+```sql
+SELECT FirstName, LastName, HireDate
+FROM Employees
+ORDER BY HireDate DESC;
+```
+
+These SQL statements demonstrate the creation and management of tables, constraints, indexes, sequences, and views, as well as basic data manipulation using DML queries.

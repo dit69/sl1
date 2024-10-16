@@ -1,0 +1,109 @@
+Here are 10 simple SQL queries demonstrating various types of joins, sub-queries, and views. I'll use two tables: `Employees` and `Departments`.
+
+### Tables
+
+**`Employees` Table:**
+```sql
+EmployeeID | FirstName | LastName | DepartmentID | Salary
+---------------------------------------------------------
+1          | John      | Doe      | 2            | 60000
+2          | Jane      | Smith    | 1            | 55000
+3          | Alex      | Johnson  | 3            | 45000
+4          | Maria     | Garcia   | 2            | 70000
+5          | David     | Lee      | 3            | 50000
+```
+
+**`Departments` Table:**
+```sql
+DepartmentID | DepartmentName
+-----------------------------
+1            | HR
+2            | Engineering
+3            | Sales
+```
+
+### 1. **Inner Join**
+This query retrieves the employee names along with their department names.
+```sql
+SELECT e.FirstName, e.LastName, d.DepartmentName
+FROM Employees e
+JOIN Departments d ON e.DepartmentID = d.DepartmentID;
+```
+
+### 2. **Left Join (Left Outer Join)**
+This query retrieves all employees, including those without a matching department.
+```sql
+SELECT e.FirstName, e.LastName, d.DepartmentName
+FROM Employees e
+LEFT JOIN Departments d ON e.DepartmentID = d.DepartmentID;
+```
+
+### 3. **Right Join (Right Outer Join)**
+This query retrieves all departments, including those without any employees.
+```sql
+SELECT e.FirstName, e.LastName, d.DepartmentName
+FROM Employees e
+RIGHT JOIN Departments d ON e.DepartmentID = d.DepartmentID;
+```
+
+### 4. **Full Outer Join**
+This query retrieves all employees and departments, including unmatched rows from both tables.
+```sql
+SELECT e.FirstName, e.LastName, d.DepartmentName
+FROM Employees e
+FULL OUTER JOIN Departments d ON e.DepartmentID = d.DepartmentID;
+```
+
+### 5. **Self Join**
+This query compares employees who have the same salary.
+```sql
+SELECT e1.FirstName AS Employee1, e2.FirstName AS Employee2, e1.Salary
+FROM Employees e1
+JOIN Employees e2 ON e1.Salary = e2.Salary AND e1.EmployeeID <> e2.EmployeeID;
+```
+
+### 6. **Sub-query in `SELECT` Clause**
+This query retrieves employees and the average salary of their department.
+```sql
+SELECT e.FirstName, e.LastName, e.Salary,
+       (SELECT AVG(Salary) FROM Employees WHERE DepartmentID = e.DepartmentID) AS AvgSalary
+FROM Employees e;
+```
+
+### 7. **Sub-query in `WHERE` Clause**
+This query retrieves employees who earn more than the average salary of their department.
+```sql
+SELECT FirstName, LastName, Salary
+FROM Employees
+WHERE Salary > (SELECT AVG(Salary) FROM Employees WHERE DepartmentID = Employees.DepartmentID);
+```
+
+### 8. **Sub-query in `FROM` Clause**
+This query retrieves the average salary for each department and filters out departments where the average salary is less than 50,000.
+```sql
+SELECT DepartmentID, AvgSalary
+FROM (SELECT DepartmentID, AVG(Salary) AS AvgSalary FROM Employees GROUP BY DepartmentID) AS DeptSalaries
+WHERE AvgSalary > 50000;
+```
+
+### 9. **Creating and Using a View**
+Create a view that shows employees earning more than 50,000.
+```sql
+CREATE VIEW HighEarningEmployees AS
+SELECT FirstName, LastName, Salary
+FROM Employees
+WHERE Salary > 50000;
+
+-- Using the View
+SELECT * FROM HighEarningEmployees;
+```
+
+### 10. **Cross Join**
+This query retrieves all possible combinations of employees and departments.
+```sql
+SELECT e.FirstName, e.LastName, d.DepartmentName
+FROM Employees e
+CROSS JOIN Departments d;
+```
+
+These queries demonstrate different types of joins, sub-queries, and views using simple SQL statements.
