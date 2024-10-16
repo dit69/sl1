@@ -1,0 +1,59 @@
+# DFS Algorithm - Recursive
+def dfs(graph, vertex, visited):
+    visited.add(vertex)  # Mark the current vertex as visited
+    print(vertex, end=' ')  # Process the vertex (print it)
+
+    # Recur for all the vertices adjacent to this vertex
+    for neighbor in graph[vertex]:
+        if neighbor not in visited:
+            dfs(graph, neighbor, visited)
+
+# Example graph represented as an adjacency list (undirected graph)
+graph = {
+    'A': ['B', 'C'],
+    'B': ['A', 'D', 'E'],
+    'C': ['A', 'F'],
+    'D': ['B'],
+    'E': ['B', 'F'],
+    'F': ['C', 'E']
+}
+
+# Create an empty set to keep track of visited vertices
+visited = set()
+
+# Call DFS starting from vertex 'A'
+print("Depth First Search:")
+dfs(graph, 'A', visited)
+
+
+from collections import deque
+
+# BFS Algorithm
+def bfs(graph, start_vertex):
+    visited = set()  # Set to store visited vertices
+    queue = deque([start_vertex])  # Queue to store vertices to visit
+    visited.add(start_vertex)  # Mark the start vertex as visited
+
+    while queue:
+        vertex = queue.popleft()  # Remove the first vertex from the queue
+        print(vertex, end=' ')  # Process the vertex (print it)
+
+        # Add all unvisited neighbors to the queue
+        for neighbor in graph[vertex]:
+            if neighbor not in visited:
+                visited.add(neighbor)
+                queue.append(neighbor)
+
+# Example graph (same as above)
+graph = {
+    'A': ['B', 'C'],
+    'B': ['A', 'D', 'E'],
+    'C': ['A', 'F'],
+    'D': ['B'],
+    'E': ['B', 'F'],
+    'F': ['C', 'E']
+}
+
+# Call BFS starting from vertex 'A'
+print("\nBreadth First Search:")
+bfs(graph, 'A')

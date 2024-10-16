@@ -1,0 +1,45 @@
+def solve_n_queens(n):
+    # This function takes an integer n as input, which represents the number of queens to be placed
+    def is_safe(board, row, col):
+        # This function checks whether a queen can be placed at position (row, col) on the board without attacking any other queen
+        for i in range(row):
+            if board[i] == col or board[i] - i == col - row or board[i] + i == col + row:
+                # Check the three conditions for queen placement
+                return False
+        return True
+
+    def place_queens(n, row, board):
+        # This function is a recursive function that places queens on the board one by one, using backtracking to explore all possible places
+        if row == n:
+            # If the current row index 'row' is equal to 'n', it means we've placed all 'n' queens on the board
+            result.append(board[:])
+            return True  # Stop after finding the first solution
+        for col in range(n):
+            if is_safe(board, row, col):
+                # For each column index, it checks whether the position is safe using the is_safe function
+                board[row] = col
+                if place_queens(n, row + 1, board):  # If a solution is found, return True
+                    return True
+        return False
+
+    result = []  # Initialize the result list to store the first solution
+    board = [-1] * n  # Initialize the board list with -1 values, indicating that no queens are placed yet
+    place_queens(n, 0, board)  # Call place_queens function with initial values
+    return result
+
+def print_board(board):
+    n = len(board)
+    for row in range(n):
+        line = ""
+        for col in range(n):
+            if board[row] == col:
+                line += "Q "
+            else:
+                line += ". "
+        print(line)
+
+n = int(input("Enter the number of Queens :"))
+solution = solve_n_queens(n)
+if solution:
+    print("Solution:")
+    print_board(solution[0])
